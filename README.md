@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="https://github.com/lotolab" target="blank"><img src="./docs/lotolab.svg" width="120" alt="Tsai Logo" /></a>
 </p>
 
 <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
