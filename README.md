@@ -1,5 +1,5 @@
 <p align="center" style="color:#ffab00">
-  <a href="https://github.com/lotolab" target="blank"><img src="./docs/lotolab.svg" width="120" alt="Tsai Logo" /></a>
+  <a href="https://github.com/lotolab" target="blank"><img src="./docs/lotolab_golden.svg" width="120" alt="Tsai Logo" /></a>
 </p>
 
 <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
