@@ -20,8 +20,8 @@
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
-    "test": "npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
-    "test:dev": "NODE_ENV=test npm run -s test -- --watchAll",
+    "test": "cross-env npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
+    "test:dev": "cross-env NODE_ENV=test npm run -s test -- --watchAll",
     "prerelease": "npm run build",
     "release": "release-it",
     "prepare": "husky install"
@@ -30,9 +30,7 @@
     "type": "git",
     "url": "git+https://github.com/lotolab/tsai-schematics.git"
   },
-  "contributors": [
-
-  ],
+  "contributors": [],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lotolab/tsai-schematics/issues"
@@ -40,12 +38,12 @@
   "homepage": "https://github.com/lotolab/tsai-schematics#readme",
   "dependencies": {
     "@angular-devkit/core": "17.3.11",
-    "@angular-devkit/schematics": "17.3.11",
     "comment-json": "4.2.5",
     "jsonc-parser": "3.3.1",
     "pluralize": "8.0.0"
   },
   "devDependencies": {
+    "@angular-devkit/schematics": "^19.0.2",
     "@commitlint/cli": "19.6.0",
     "@commitlint/config-angular": "19.6.0",
     "@types/jest": "29.5.14",
@@ -53,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "8.16.0",
     "@typescript-eslint/parser": "8.16.0",
     "cpx2": "8.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "9.15.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.31.0",
