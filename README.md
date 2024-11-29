@@ -13,7 +13,7 @@
 ## Installation
 
 ```bash
-$ npm install -g @tsai-platform/tsai-schematics
+$ npm install -g @tsailab/tsai-schematics
 ```
 
 ## Usage

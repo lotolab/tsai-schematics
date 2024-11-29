@@ -102,7 +102,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
     git push origin my-fix-branch
     ```
 
-1. In GitHub, send a pull request to `tsai-platform:main`.
+1. In GitHub, send a pull request to `tsai-plat:main`.
 * If we suggest changes then:
   * Make the required updates.
   * Re-run the Nest test suites to ensure tests are still passing.
