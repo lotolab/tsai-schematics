@@ -44,7 +44,7 @@ export function main(options: LibraryOptions): Rule {
   ]);
 }
 
-function getDefaultLibraryPrefix(defaultLibraryPrefix = '@tsai-platform') {
+function getDefaultLibraryPrefix(defaultLibraryPrefix = '@tsailab') {
   const fileSystemReader = new FileSystemReader(process.cwd())
   const content: string | undefined = fileSystemReader.readSyncAnyOf([
     'nest-cli.json',

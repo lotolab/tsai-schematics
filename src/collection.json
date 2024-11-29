@@ -102,7 +102,7 @@
     },
     "library": {
       "factory": "./lib/library/library.factory#main",
-      "description": "Create a Nest library (mono-repo).",
+      "description": "Create a Tsai library (mono-repo).",
       "schema": "./lib/library/schema.json",
       "aliases": ["lib"]
     },

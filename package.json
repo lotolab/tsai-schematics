@@ -1,7 +1,7 @@
 {
-  "name": "@tsai-platform/schematics",
+  "name": "@tsailab/schematics",
   "version": "1.0.1-0",
-  "description": "Tsai - modern, fast, powerful node.js web framework (@tsai-platform/schematics)",
+  "description": "Tsai - modern, fast, powerful node.js web framework (@tsailab/schematics)",
   "main": "dist/index.js",
   "files": [
     "dist/**/*"
@@ -20,6 +20,7 @@
     "publish:next": "npm publish --access public --tag next",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
+    "unpublish":"npm -f unpublish",
     "test": "cross-env npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
     "test:dev": "cross-env NODE_ENV=test npm run -s test -- --watchAll",
     "prerelease": "npm run build",
