@@ -25,4 +25,4 @@ $ npm install -g @tsai-platform/tsai-schematics
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+Tsai-platform is [MIT licensed](LICENSE).
