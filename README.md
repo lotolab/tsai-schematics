@@ -1,4 +1,4 @@
-<p align="center" style="color:#ffab00">
+<p align="center" >
   <a href="https://github.com/lotolab" target="blank"><img src="./docs/lotolab_golden.svg" width="120" alt="Tsai Logo" /></a>
 </p>
 
@@ -13,7 +13,7 @@
 ## Installation
 
 ```bash
-$ npm install -g @tsailab/tsai-schematics
+$ npm install -g @tsailab/schematics
 ```
 
 ## Usage
@@ -25,4 +25,4 @@ $ npm install -g @tsailab/tsai-schematics
 
 ## License
 
-Tsai-platform is [MIT licensed](LICENSE).
+Tsai-plat is [MIT licensed](LICENSE).
