@@ -14,5 +14,6 @@ src/lib/**/*.d.ts
 !src/lib/**/workspace/**/*
 src/utils/**/*.js
 src/utils/**/*.d.ts
+!src/lib/**/*.d.ts
 
 .DS_Store
