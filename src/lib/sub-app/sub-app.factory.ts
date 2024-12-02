@@ -91,6 +91,7 @@ function transform(options: SubAppOptions): SubAppOptions {
   if (!target.name) {
     target.name = DEFAULT_APP_NAME;
   }
+
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = normalizeToKebabOrSnakeCase(target.name);
   target.path =
@@ -389,3 +390,8 @@ function generate(options: SubAppOptions): Source {
     move(path),
   ]);
 }
+
+/**
+ * 
+ */
+function generatePackages(){}

@@ -5,6 +5,7 @@ import {
   chain,
   mergeWith,
   move,
+  noop,
   Rule,
   SchematicsException,
   Source,
@@ -18,6 +19,7 @@ import {
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
+  DEFAULT_PUBLISH_LIBBDIR,
   PROJECT_TYPE,
 } from '../defaults';
 import { LibraryOptions } from './library.schema';
@@ -41,6 +43,10 @@ export function main(options: LibraryOptions): Rule {
     updateJestEndToEnd(options),
     updateTsConfig(options.name, options.prefix, options.path),
     branchAndMerge(mergeWith(generate(options))),
+    (host:Tree,context)=> 
+      isMonorepo(host) ? 
+    chain([branchAndMerge(mergeWith(generatePackages(options,host)))])(host,context) : 
+    noop()(host,context)
   ]);
 }
 
@@ -83,6 +89,11 @@ function transform(options: LibraryOptions): LibraryOptions {
   return target;
 }
 
+/**
+ * 
+ * @param options 
+ * @returns 
+ */
 function updatePackageJson(options: LibraryOptions) {
   return (host: Tree) => {
     if (!host.exists('package.json')) {
@@ -243,6 +254,7 @@ function updateTsConfig(
   };
 }
 
+// 
 function addLibraryToCliOptions(
   projectRoot: string,
   projectName: string,
@@ -289,14 +301,41 @@ function addLibraryToCliOptions(
   };
 }
 
+function isMonorepo(host:Tree){
+  const nestFileExists = host.exists('nest.json');
+  const nestCliFileExists = host.exists('nest-cli.json');
+  if (!nestFileExists && !nestCliFileExists) {
+    return false;
+  }
+  const filename = nestCliFileExists ? 'nest-cli.json' : 'nest.json';
+  const source = host.read(filename);
+  if (!source) {
+    return false;
+  }
+  const sourceText = source.toString('utf-8');
+  const optionsObj = parse(sourceText) as Record<string, any>;
+  return !!optionsObj.monorepo;
+}
+
 function generate(options: LibraryOptions): Source {
   const path = join(options.path as Path, options.name);
-
   return apply(url(join('./files' as Path, options.language)), [
     template({
       ...strings,
       ...options,
     }),
     move(path),
+  ]);
+}
+// 
+function generatePackages(options: LibraryOptions,host:Tree){
+  const pkgname = options.pkgBase?  options.pkgBase :DEFAULT_PUBLISH_LIBBDIR
+  const pkgPath = join(host.root.path,pkgname)
+  return apply(url(join('./workspace' as Path, 'packages')), [
+    template({
+      ...strings,
+      ...options,
+    }),
+    move(pkgPath),
   ]);
 }

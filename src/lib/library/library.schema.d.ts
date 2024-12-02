@@ -21,4 +21,6 @@ export interface LibraryOptions {
    * The libraries root directory
    */
   rootDir?: string | Path;
+
+  pkgBase?:string
 }
