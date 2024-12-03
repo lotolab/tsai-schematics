@@ -1,6 +1,6 @@
 {
   "name": "@tsailab/schematics",
-  "version": "1.1.0",
+  "version": "1.0.9",
   "description": "Tsai - modern, fast, powerful node.js web framework (@tsailab/schematics)",
   "main": "dist/index.js",
   "files": [
