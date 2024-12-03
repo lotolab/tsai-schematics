@@ -28,6 +28,7 @@ import {
   TEST_ENV,
 } from '../defaults';
 import { SubAppOptions } from './sub-app.schema';
+import { YamlLoader } from '../yaml/yaml.loader';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -54,6 +55,7 @@ export function main(options: SubAppOptions): Rule {
           ])(tree, context),
     addAppsToCliOptions(options.path, options.name, appName),
     branchAndMerge(mergeWith(generate(options))),
+    (tree)=> updatePnpmWorkspaceYaml(options,tree) 
   ]);
 }
 
@@ -172,6 +174,19 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
   };
 }
 
+function updatePnpmWorkspaceYaml(options: SubAppOptions,host:Tree){
+  if(!isMonorepo(host))return host
+
+  const pkgbase = options.rootDir
+  try {
+    const yamlLoader = new YamlLoader(process.cwd())
+    yamlLoader.mergePkgSync(pkgbase)
+  } catch (_e) {
+    
+  }
+  return host
+}
+
 function updateNpmScripts(
   scripts: Record<string, any>,
   options: SubAppOptions,
@@ -225,6 +240,8 @@ function updateNpmScripts(
     ] = `node dist/${defaultSourceRoot}/${defaultAppName}/main`;
   }
 }
+
+
 
 function updateJestOptions(
   jestOptions: Record<string, any>,
@@ -390,8 +407,3 @@ function generate(options: SubAppOptions): Source {
     move(path),
   ]);
 }
-
-/**
- * 
- */
-function generatePackages(){}

@@ -9,6 +9,7 @@ export const DEFAULT_APP_NAME = 'app';
 export const DEFAULT_DIR_ENTRY_APP = 'main';
 export const TEST_ENV = 'test';
 export const DEFAULT_PUBLISH_LIBBDIR = 'packages';
+export const PNPM_WORKSPACE_FILE = 'pnpm-workspace.yaml'
 export const PROJECT_TYPE = {
   LIBRARY: 'library',
   APPLICATION: 'application',

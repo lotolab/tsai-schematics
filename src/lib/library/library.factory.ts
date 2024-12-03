@@ -24,6 +24,7 @@ import {
 } from '../defaults';
 import { LibraryOptions } from './library.schema';
 import { FileSystemReader } from '../readers';
+import { YamlLoader } from '../yaml/indext';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -45,8 +46,11 @@ export function main(options: LibraryOptions): Rule {
     branchAndMerge(mergeWith(generate(options))),
     (host:Tree,context)=> 
       isMonorepo(host) ? 
-    chain([branchAndMerge(mergeWith(generatePackages(options,host)))])(host,context) : 
-    noop()(host,context)
+    chain([
+      branchAndMerge(mergeWith(generatePackages(options,host))),
+    ])(host,context) : 
+    noop()(host,context),
+    (tree:Tree)=>updatePnpmWorkspaceYaml(options,tree)
   ]);
 }
 
@@ -86,13 +90,15 @@ function transform(options: LibraryOptions): LibraryOptions {
       : normalize(defaultSourceRoot);
 
   target.prefix = target.prefix || getDefaultLibraryPrefix();
+
+  target.libPublishing = !!options.libPublishing
   return target;
 }
 
 /**
  * 
  * @param options 
- * @returns 
+ * @returns tree
  */
 function updatePackageJson(options: LibraryOptions) {
   return (host: Tree) => {
@@ -319,7 +325,7 @@ function isMonorepo(host:Tree){
 
 function generate(options: LibraryOptions): Source {
   const path = join(options.path as Path, options.name);
-  return apply(url(join('./files' as Path, options.language)), [
+  return apply(url(join('./files' as Path, options.libPublishing? `ts-lib` : options.language)), [
     template({
       ...strings,
       ...options,
@@ -327,6 +333,20 @@ function generate(options: LibraryOptions): Source {
     move(path),
   ]);
 }
+
+function updatePnpmWorkspaceYaml(options: LibraryOptions,host:Tree){
+  if(!isMonorepo(host))return host
+  const pkgbase = options.rootDir
+  try {
+    const yamlLoader = new YamlLoader(process.cwd())
+    yamlLoader.mergePkgSync(pkgbase)
+  } catch (_e) {
+    
+  }
+
+  return host
+}
+
 // 
 function generatePackages(options: LibraryOptions,host:Tree){
   const pkgname = options.pkgBase?  options.pkgBase :DEFAULT_PUBLISH_LIBBDIR

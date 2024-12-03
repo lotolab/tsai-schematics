@@ -22,7 +22,7 @@
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
     "unpublish": "npm -f unpublish",
-    "test": "npm run clean && npx jest -w 1 --no-cache --config jest.json",
+    "test": "npm run clean && NODE_ENV=test jest -w 1 --no-cache --config jest.json",
     "test:dev": "cross-env NODE_ENV=test npm run -s test -- --watchAll",
     "prerelease": "npm run build",
     "release": "release-it",
@@ -41,6 +41,7 @@
   "dependencies": {
     "@angular-devkit/core": "17.3.11",
     "comment-json": "4.2.5",
+    "js-yaml": "^4.1.0",
     "jsonc-parser": "3.3.1",
     "pluralize": "8.0.0"
   },
@@ -49,6 +50,7 @@
     "@commitlint/cli": "19.6.0",
     "@commitlint/config-angular": "19.6.0",
     "@types/jest": "29.5.14",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "22.10.1",
     "@typescript-eslint/eslint-plugin": "8.16.0",
     "@typescript-eslint/parser": "8.16.0",

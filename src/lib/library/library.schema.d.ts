@@ -23,4 +23,6 @@ export interface LibraryOptions {
   rootDir?: string | Path;
 
   pkgBase?:string
+
+  libPublishing?:boolean
 }
