@@ -33,7 +33,7 @@ export class YamlLoader implements Yaml{
             data = Object.assign(data,origin)
         }
 
-        if(!data?.packages || !Array.isArray(data.packages)){
+        if(!data?.packages){
             data.packages = []
         }
 

@@ -30,7 +30,7 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
-    "@tsailab/schematics":"^1.2.3",
+    "@tsailab/schematics":"^1.2.5",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
     "@types/node": "^22.0.0",

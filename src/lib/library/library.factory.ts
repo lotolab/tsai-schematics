@@ -67,6 +67,7 @@ function getDefaultLibraryPrefix(defaultLibraryPrefix = '@tsai-platform') {
     '.nestcli.json',
     '.nest-cli.json',
     'nest.json',
+    'tsai-cli.json'
   ]);
   
   try {
@@ -122,14 +123,14 @@ function transform(options: LibraryOptions): LibraryOptions {
 
   target.prefix = target.prefix || getDefaultLibraryPrefix();
 
-  if(options.libPublishing){
-    target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
-    target.description = !!target.description
-      ? target.description
-      : `${DEFAULT_DESCRIPTION} ${target.name}`;
+  // if(options.libPublishing){
+  target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
+  target.description = !!target.description
+    ? target.description
+    : `${DEFAULT_DESCRIPTION} ${target.name}`;
 
-    target.version = getVersionFromPackageJson()
-  }
+  target.version = getVersionFromPackageJson()
+  // }
 
   target.pkgBase = options.pkgBase || DEFAULT_PUBLISH_LIBBDIR
 
@@ -367,23 +368,27 @@ function isMonorepo(host:Tree){
 function generate(options: LibraryOptions,host:Tree): Source {
   const path = join(options.path as Path, options.name);
 
-  const packageKey = !!options.libPublishing
-  ? options.prefix || `@tsai-platform` + '/' + options.name
+  const publishingMode = isMonorepo(host)
+
+  const packageKey = publishingMode
+  ? (options.prefix || `@tsai-platform`) + '/' + options.name
   : options.name;
 
   // write npm
-  if(options.libPublishing){
+  if(publishingMode){
 
-    if(!host.exists('.npmrc')){
-      host.create('.npmrc',npmrcContent)
+    const npmfile = join(host.root.path,options.path as Path, options.name, '.npmrc')
+    if(!host.exists(npmfile)){
+      host.create(npmfile,npmrcContent)
     }
 
-    if(!host.exists('.npmignore')){
-      host.create('.npmignore',npmignoreContent)
+    const npmIgnoreFile = join(host.root.path,options.path as Path, options.name, '.npmignore')
+    if(!host.exists(npmIgnoreFile)){
+      host.create(npmIgnoreFile,npmignoreContent)
     }
   }
 
-  return apply(url(join('./files' as Path, !!options.libPublishing? `ts-lib` : options.language)), [
+  return apply(url(join('./files' as Path, !!publishingMode ? `ts-lib` : options.language)), [
     template({
       ...strings,
       ...{
@@ -402,7 +407,6 @@ function updatePnpmWorkspaceYaml(options: LibraryOptions,host:Tree){
     const yamlLoader = new YamlLoader(process.cwd())
     yamlLoader.mergePkgSync(pkgbase)
   } catch (_e) {
-    
   }
 
   return host
