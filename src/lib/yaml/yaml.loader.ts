@@ -21,7 +21,7 @@ export class YamlLoader implements Yaml{
         let data:Record<string,any> = {}
         if(!fs.existsSync(file)|| fs.statSync(file).isFile()){
             data = {
-                packages:[`\'${pkgbase}/*\'`]
+                packages:[`${pkgbase}/*`]
             }
             this.writeYamlSync(data,file)
             return data
@@ -37,9 +37,9 @@ export class YamlLoader implements Yaml{
             data.packages = []
         }
 
-        const find  = (data.packages as unknown as string[]).find((s)=> s === `\'${pkgbase}/*\'`)
+        const find  = (data.packages as unknown as string[]).find((s)=> s === `${pkgbase}/*`)
         if(!find){
-            (data.packages as unknown as string[]).push(`\'${pkgbase}/*\'`)
+            (data.packages as unknown as string[]).push(`${pkgbase}/*'`)
         }
 
         this.writeYamlSync(data,file)
