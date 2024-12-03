@@ -1,4 +1,4 @@
-import { src, task } from 'gulp';
+import { src, task ,series} from 'gulp';
 import * as clean from 'gulp-clean';
 
 import { sources,dist } from '../config';
@@ -32,3 +32,4 @@ function cleanDist(){
 
 task('clean:dist',cleanDist);
 task('clean:src',cleanSrc);
+task('clean:all',series(cleanDist,cleanSrc))
