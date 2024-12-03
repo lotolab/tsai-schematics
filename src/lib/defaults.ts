@@ -1,5 +1,5 @@
-export const DEFAULT_AUTHOR = '';
-export const DEFAULT_DESCRIPTION = '';
+export const DEFAULT_AUTHOR = 'tsailab';
+export const DEFAULT_DESCRIPTION = 'Tsailab library';
 export const DEFAULT_LANGUAGE = 'ts';
 export const DEFAULT_VERSION = '0.0.1';
 export const DEFAULT_PATH_NAME = 'src';

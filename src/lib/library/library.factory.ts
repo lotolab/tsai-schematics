@@ -16,6 +16,8 @@ import {
 import { parse } from 'jsonc-parser';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
+  DEFAULT_AUTHOR,
+  DEFAULT_DESCRIPTION,
   DEFAULT_LANGUAGE,
   DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
@@ -25,6 +27,7 @@ import {
 import { LibraryOptions } from './library.schema';
 import { FileSystemReader } from '../readers';
 import { YamlLoader } from '../yaml/indext';
+import { npmignoreContent, npmrcContent } from './npm.content';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -43,13 +46,13 @@ export function main(options: LibraryOptions): Rule {
     updatePackageJson(options),
     updateJestEndToEnd(options),
     updateTsConfig(options.name, options.prefix, options.path),
-    branchAndMerge(mergeWith(generate(options))),
     (host:Tree,context)=> 
       isMonorepo(host) ? 
     chain([
+      branchAndMerge(mergeWith(generate(options,host))),
       branchAndMerge(mergeWith(generatePackages(options,host))),
     ])(host,context) : 
-    noop()(host,context),
+    chain([branchAndMerge(mergeWith(generate(options,host)))])(host,context),
     (tree:Tree)=>updatePnpmWorkspaceYaml(options,tree)
   ]);
 }
@@ -79,6 +82,8 @@ function transform(options: LibraryOptions): LibraryOptions {
   const defaultSourceRoot =
     options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
 
+  
+
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
   }
@@ -91,9 +96,15 @@ function transform(options: LibraryOptions): LibraryOptions {
 
   target.prefix = target.prefix || getDefaultLibraryPrefix();
 
+  if(options.libPublishing){
+    target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
+    target.description = !!target.description
+      ? target.description
+      : `${DEFAULT_DESCRIPTION} ${target.name}`;
+  }
+
   target.pkgBase = options.pkgBase || DEFAULT_PUBLISH_LIBBDIR
 
-  target.libPublishing = !!options.libPublishing
   return target;
 }
 
@@ -325,14 +336,26 @@ function isMonorepo(host:Tree){
   return !!optionsObj.monorepo;
 }
 
-function generate(options: LibraryOptions): Source {
+function generate(options: LibraryOptions,host:Tree): Source {
   const path = join(options.path as Path, options.name);
 
-  const packageKey = options.libPublishing
+  const packageKey = !!options.libPublishing
   ? options.prefix || `@tsai-platform` + '/' + options.name
   : options.name;
 
-  return apply(url(join('./files' as Path, options.libPublishing? `ts-lib` : options.language)), [
+  // write npm
+  if(options.libPublishing){
+
+    if(!host.exists('.npmrc')){
+      host.create('.npmrc',npmrcContent)
+    }
+
+    if(!host.exists('.npmignore')){
+      host.create('.npmignore',npmignoreContent)
+    }
+  }
+
+  return apply(url(join('./files' as Path, !!options.libPublishing? `ts-lib` : options.language)), [
     template({
       ...strings,
       ...{

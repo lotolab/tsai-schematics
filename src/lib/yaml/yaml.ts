@@ -1,6 +1,6 @@
 
 import { Abortable } from 'events';
-import  { PathLike,WriteFileOptions } from 'fs'
+import  { PathLike } from 'fs'
 
 export type ReaderOptions =  ({
     encoding?: null | undefined;
@@ -12,5 +12,6 @@ export interface Yaml {
     writeSync(data:string,filename?:string):undefined
     writeYamlSync(data:Record<string,any>,file:PathLike):undefined
     mergePkgSync(pkgbase:string,filename?:string):Record<string,any>|undefined
+    // writeSync(data:string,file:PathLike)
 }
 
