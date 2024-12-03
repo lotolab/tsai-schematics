@@ -43,7 +43,7 @@ interface TsConfigPartialType {
 
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
-  console.log('schematics****>',options)
+
   return chain([
     addLibraryToCliOptions(options.path, options.name),
     updatePackageJson(options),
