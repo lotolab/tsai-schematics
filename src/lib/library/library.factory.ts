@@ -14,6 +14,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { parse } from 'jsonc-parser';
+import { existsSync, readFileSync } from 'fs';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
 import {
   DEFAULT_AUTHOR,
@@ -22,6 +23,7 @@ import {
   DEFAULT_LIB_PATH,
   DEFAULT_PATH_NAME,
   DEFAULT_PUBLISH_LIBBDIR,
+  DEFAULT_VERSION,
   PROJECT_TYPE,
 } from '../defaults';
 import { LibraryOptions } from './library.schema';
@@ -41,6 +43,7 @@ interface TsConfigPartialType {
 
 export function main(options: LibraryOptions): Rule {
   options = transform(options);
+  console.log('schematics****>',options)
   return chain([
     addLibraryToCliOptions(options.path, options.name),
     updatePackageJson(options),
@@ -77,12 +80,35 @@ function getDefaultLibraryPrefix(defaultLibraryPrefix = '@tsai-platform') {
   return defaultLibraryPrefix;
 }
 
+function getVersionFromPackageJson(): string {
+  try {
+    if (!existsSync('./package.json')) {
+      return DEFAULT_VERSION;
+    }
+    const packageJson = JSON.parse(
+      stripBom(readFileSync('./package.json', 'utf-8')),
+    );
+    if (!packageJson.version) {
+      return DEFAULT_VERSION;
+    }
+    let version = packageJson.version;
+ 
+    return version?.length ? version :DEFAULT_VERSION;
+  } catch {
+    return DEFAULT_VERSION;
+  }
+}
+function stripBom(value: string): string {
+  if (value.charCodeAt(0) === 0xfeff) {
+    return value.slice(1);
+  }
+  return value;
+}
+
 function transform(options: LibraryOptions): LibraryOptions {
   const target: LibraryOptions = Object.assign({}, options);
   const defaultSourceRoot =
     options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
-
-  
 
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
@@ -101,6 +127,8 @@ function transform(options: LibraryOptions): LibraryOptions {
     target.description = !!target.description
       ? target.description
       : `${DEFAULT_DESCRIPTION} ${target.name}`;
+
+    target.version = getVersionFromPackageJson()
   }
 
   target.pkgBase = options.pkgBase || DEFAULT_PUBLISH_LIBBDIR
