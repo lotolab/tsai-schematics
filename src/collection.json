@@ -108,7 +108,7 @@
     },
     "sub-app": {
       "factory": "./lib/sub-app/sub-app.factory#main",
-      "description": "Create a Nest application (mono-repo).",
+      "description": "Create a Tsai application (mono-repo).",
       "schema": "./lib/sub-app/schema.json",
       "aliases": ["app"]
     },

@@ -54,7 +54,7 @@ export function main(options: LibraryOptions): Rule {
   ]);
 }
 
-function getDefaultLibraryPrefix(defaultLibraryPrefix = '@tsailab') {
+function getDefaultLibraryPrefix(defaultLibraryPrefix = '@tsai-platform') {
   const fileSystemReader = new FileSystemReader(process.cwd())
   const content: string | undefined = fileSystemReader.readSyncAnyOf([
     'nest-cli.json',
@@ -90,6 +90,8 @@ function transform(options: LibraryOptions): LibraryOptions {
       : normalize(defaultSourceRoot);
 
   target.prefix = target.prefix || getDefaultLibraryPrefix();
+
+  target.pkgBase = options.pkgBase || DEFAULT_PUBLISH_LIBBDIR
 
   target.libPublishing = !!options.libPublishing
   return target;
@@ -325,10 +327,18 @@ function isMonorepo(host:Tree){
 
 function generate(options: LibraryOptions): Source {
   const path = join(options.path as Path, options.name);
+
+  const packageKey = options.libPublishing
+  ? options.prefix || `@tsai-platform` + '/' + options.name
+  : options.name;
+
   return apply(url(join('./files' as Path, options.libPublishing? `ts-lib` : options.language)), [
     template({
       ...strings,
-      ...options,
+      ...{
+        ...options,
+        packageKey
+      },
     }),
     move(path),
   ]);
@@ -336,7 +346,7 @@ function generate(options: LibraryOptions): Source {
 
 function updatePnpmWorkspaceYaml(options: LibraryOptions,host:Tree){
   if(!isMonorepo(host))return host
-  const pkgbase = options.rootDir
+  const pkgbase = options.rootDir||DEFAULT_LIB_PATH
   try {
     const yamlLoader = new YamlLoader(process.cwd())
     yamlLoader.mergePkgSync(pkgbase)

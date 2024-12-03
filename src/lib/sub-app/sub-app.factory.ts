@@ -177,7 +177,7 @@ function updatePackageJson(options: SubAppOptions, defaultAppName: string) {
 function updatePnpmWorkspaceYaml(options: SubAppOptions,host:Tree){
   if(!isMonorepo(host))return host
 
-  const pkgbase = options.rootDir
+  const pkgbase = options.rootDir || DEFAULT_APPS_PATH
   try {
     const yamlLoader = new YamlLoader(process.cwd())
     yamlLoader.mergePkgSync(pkgbase)

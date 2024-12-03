@@ -16,7 +16,7 @@
     "prefix": {
       "type": "string",
       "description": "The prefix of the library.",
-      "x-prompt": "What prefix would you like to use for the library (default: @tsailab or 'defaultLibraryPrefix' setting value)?"
+      "x-prompt": "What prefix would you like to use for the library (default: @tsai-platform or 'defaultLibraryPrefix' setting value)?"
     },
     "language": {
       "type": "string",
@@ -31,6 +31,16 @@
       "type": "string",
       "format": "path",
       "description": "The libraries root directory."
+    },
+    "pkgBase": {
+      "type": "string",
+      "default":"packages",
+      "description": "The libraries root directory."
+    },
+    "libPublishing": {
+      "type": "boolean",
+      "default": false,
+      "description": "The libraries is publishing to npmjs."
     }
   },
   "required": ["name", "prefix"]
