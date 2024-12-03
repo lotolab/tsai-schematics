@@ -18,6 +18,10 @@ $ npm install -g @tsailab/schematics
 
 ## Usage
 
+```bash
+# see @tsailab/cli
+
+```
 
 
 ## Stay in touch
