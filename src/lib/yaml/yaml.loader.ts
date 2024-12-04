@@ -19,7 +19,7 @@ export class YamlLoader implements Yaml{
     mergePkgSync(pkgbase:string,filename:string=PNPM_WORKSPACE_FILE ): Record<string, any> | undefined {
         const file = path.join(this.directory,filename)
         let data:Record<string,any> = {}
-        if(!fs.existsSync(file)|| fs.statSync(file).isFile()){
+        if(!fs.existsSync(file)|| !fs.statSync(file).isFile()){
             data = {
                 packages:[`${pkgbase}/*`]
             }
@@ -28,7 +28,7 @@ export class YamlLoader implements Yaml{
         }
 
         const origin = this.readSync(file)
- 
+
         if(typeof origin === 'object'){
             data = Object.assign(data,origin)
         }
@@ -37,9 +37,12 @@ export class YamlLoader implements Yaml{
             data.packages = []
         }
 
-        const find  = (data.packages as unknown as string[]).find((s)=> s === `${pkgbase}/*`)
+        const find  = (data.packages as unknown as string[]).find(
+            (s)=>  new RegExp(`${pkgbase}\/*`,'g').test(s)
+        )
+
         if(!find){
-            (data.packages as unknown as string[]).push(`${pkgbase}/*'`)
+            (data.packages as unknown as string[]).push(`${pkgbase}/*`)
         }
 
         this.writeYamlSync(data,file)
@@ -54,9 +57,9 @@ export class YamlLoader implements Yaml{
      * 
      */
     readSync(file:fs.PathLike){
-        if(!fs.existsSync(file)|| fs.statSync(file).isFile())
+        if(!fs.existsSync(file)|| !fs.statSync(file).isFile())
             return undefined
-        const data =  yaml.load(fs.readFileSync(file,'utf8'),{json:false})
+        const data =  yaml.load(fs.readFileSync(file,'utf8'),{json:true})
 
         return data && Object.keys(data).length ? data as unknown as Record<string,any> : undefined
     }
