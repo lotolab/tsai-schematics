@@ -7,9 +7,6 @@
   </h4>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
 <p align="center">
   A progressive 
   <a href="http://nodejs.org" target="_blank">
@@ -64,6 +61,8 @@ $ <%= packageManager %> run test:e2e
 $ <%= packageManager %> run test:cov
 ```
 
+
+
 ## Deployment
 
 When you're ready to deploy your monorepo application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [Deployment documentation](https://docs.nestjs.com/deployment) for more information.
@@ -77,11 +76,25 @@ $ mau deploy
 
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
+### Dependencies Import
+
+> Tsai monorepo project
+
+```bash
+# add an global project package
+pnpm add <pkgname> -w
+# Example: add package into spec package
+pnpm --filter math-lib add -D typescript @types/lodash
+
+# Support glob pattern
+pnpm --filter pkg* run test
+```
+
 
 ## Support
 
-Tsai is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. 
+Tsai is an MIT-licensed open source project. It has grown thanks to the support of NestJS and its amazing backers.
 
 ## License
 
-Tsai is [MIT licensed](https://github.com/tsai-plat/tsai-cli/blob/main/LICENSE).
+Tsai is [MIT licensed](https://github.com/tsai-plat/.github/blob/main/LICENSE).

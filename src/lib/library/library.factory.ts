@@ -109,7 +109,8 @@ function stripBom(value: string): string {
 function transform(options: LibraryOptions): LibraryOptions {
   const target: LibraryOptions = Object.assign({}, options);
   const defaultSourceRoot =
-    options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
+    options.rootDir !== undefined ? 
+    options.rootDir : options.pkgPublic ? DEFAULT_PUBLISH_LIBBDIR: DEFAULT_LIB_PATH;
 
   if (!target.name) {
     throw new SchematicsException('Option (name) is required.');
@@ -132,7 +133,12 @@ function transform(options: LibraryOptions): LibraryOptions {
   target.version = getVersionFromPackageJson()
   // }
 
-  target.pkgBase = options.pkgBase || DEFAULT_PUBLISH_LIBBDIR
+  if(options.rootDir !== undefined){
+    target.pkgBase = options.rootDir === DEFAULT_LIB_PATH && options.pkgPublic ? DEFAULT_PUBLISH_LIBBDIR : options.rootDir;
+  }else {
+    target.pkgBase = options.pkgPublic ? DEFAULT_PUBLISH_LIBBDIR : DEFAULT_LIB_PATH;
+  }
+    
 
   return target;
 }
