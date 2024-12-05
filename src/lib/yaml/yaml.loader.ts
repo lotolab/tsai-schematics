@@ -49,7 +49,6 @@ export class YamlLoader implements Yaml{
         return data
     }
 
-    
 
     /**
      * 
@@ -67,6 +66,15 @@ export class YamlLoader implements Yaml{
     writeSync(data: string,filename:string=PNPM_WORKSPACE_FILE): undefined {
         const file = path.join(this.directory,filename)
         fs.writeFileSync(file,data,{encoding:"utf8"})
+    }
+
+    writeFileSync(data:string,filename:string){
+        const file = path.join(this.directory,filename)
+        if(!fs.existsSync(file)){
+            fs.writeFileSync(file,data,'utf8')
+        }else {
+            console.warn(`${filename} has been exists in root.`)
+        }
     }
 
     writeYamlSync( data: Record<string,any>,file:fs.PathLike ): undefined {

@@ -20,3 +20,11 @@ tsconfig.json
 ## dependencies
 node_modules/\n
 `
+
+export const workspaceNpmrcContent = `auto-install-peers = true
+lockfile = true
+link-workspace-packages = true
+provenance = true
+save-exact = true
+strict-peer-dependencies = false
+tag-version-prefix=""\n`

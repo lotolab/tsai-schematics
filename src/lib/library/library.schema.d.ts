@@ -24,7 +24,7 @@ export interface LibraryOptions {
 
   pkgBase?:string
 
-  libPublishing?:boolean
+  pkgPublic?:boolean
 
   author?:string
   version?:string

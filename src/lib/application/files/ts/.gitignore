@@ -2,11 +2,13 @@
 
 # project files
 .env
+.env*
 
 # compiled output
 /dist
 /tmp
 /out-tsc
+/build
 
 # dependencies
 /node_modules
@@ -26,3 +28,42 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# temp directory
+.temp
+.tmp
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Tsai public library
+**/*.tsbuildinfo
+packages/**/dist
+libs/**/dist
+**/node_modules
+
+# Tsai App environment config
+**/.conf/*
+!**/.conf/**/*.example

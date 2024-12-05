@@ -29,7 +29,7 @@ import {
 import { LibraryOptions } from './library.schema';
 import { FileSystemReader } from '../readers';
 import { YamlLoader } from '../yaml/indext';
-import { npmignoreContent, npmrcContent } from './npm.content';
+import { npmignoreContent, npmrcContent, workspaceNpmrcContent } from './npm.content';
 
 type UpdateJsonFn<T> = (obj: T) => T | void;
 interface TsConfigPartialType {
@@ -45,10 +45,10 @@ export function main(options: LibraryOptions): Rule {
   options = transform(options);
 
   return chain([
-    addLibraryToCliOptions(options.path, options.name),
+    addLibraryToCliOptions(options.path, options.name,options.pkgPublic),
     updatePackageJson(options),
     updateJestEndToEnd(options),
-    updateTsConfig(options.name, options.prefix, options.path),
+    updateTsConfig(options.name, options.prefix, options.path,options.pkgPublic),
     (host:Tree,context)=> 
       isMonorepo(host) ? 
     chain([
@@ -138,7 +138,7 @@ function transform(options: LibraryOptions): LibraryOptions {
 }
 
 /**
- * 
+ * update root package
  * @param options 
  * @returns tree
  */
@@ -147,7 +147,9 @@ function updatePackageJson(options: LibraryOptions) {
     if (!host.exists('package.json')) {
       return host;
     }
-    const distRoot = join(options.path as Path, options.name, 'src');
+
+    const isPublicMode = isMonorepo(host) && options.pkgPublic
+    const distRoot = join(options.path as Path, options.name, isPublicMode ? 'dist': 'src');
     const packageKey = options.prefix
       ? options.prefix + '/' + options.name
       : options.name;
@@ -163,6 +165,14 @@ function updatePackageJson(options: LibraryOptions) {
   };
 }
 
+/**
+ * update root package.json jest
+ * @param jestOptions 
+ * @param options 
+ * @param packageKey 
+ * @param distRoot dist 
+ *  
+ */
 function updateJestConfig(
   jestOptions: Record<string, any>,
   options: LibraryOptions,
@@ -176,8 +186,10 @@ function updateJestConfig(
     jestOptions.rootDir = '.';
     jestOptions.coverageDirectory = './coverage';
   }
+
+  // add public arg
   const defaultSourceRoot =
-    options.rootDir !== undefined ? options.rootDir : DEFAULT_LIB_PATH;
+    options.rootDir !== undefined ? options.rootDir : options.pkgPublic ? DEFAULT_PUBLISH_LIBBDIR : DEFAULT_LIB_PATH;
 
   const jestSourceRoot = `<rootDir>/${defaultSourceRoot}/`;
   if (!jestOptions.roots) {
@@ -260,16 +272,25 @@ function updateJsonFile<T>(
   return host;
 }
 
+/**
+ * hanlde root tsconfig.json
+ * @param packageName name
+ * @param packagePrefix scope
+ * @param root libs or packages or input path
+ */
 function updateTsConfig(
   packageName: string,
   packagePrefix: string,
   root: string,
+  pkgPublic:boolean = false
 ) {
   return (host: Tree) => {
     if (!host.exists('tsconfig.json')) {
       return host;
     }
-    const distRoot = join(root as Path, packageName, 'src');
+
+    const isPublicMode = isMonorepo(host) && pkgPublic
+    const distRoot = join(root as Path, packageName, isPublicMode? 'dist': 'src');
     const packageKey = packagePrefix
       ? packagePrefix + '/' + packageName
       : packageName;
@@ -306,6 +327,7 @@ function updateTsConfig(
 function addLibraryToCliOptions(
   projectRoot: string,
   projectName: string,
+  pkgPublic:boolean = false
 ): Rule {
   const rootPath = join(projectRoot as Path, projectName);
   const project = {
@@ -314,7 +336,7 @@ function addLibraryToCliOptions(
     entryFile: 'index',
     sourceRoot: join(rootPath, 'src'),
     compilerOptions: {
-      tsConfigPath: join(rootPath, 'tsconfig.lib.json'),
+      tsConfigPath: join(rootPath, pkgPublic ? 'tsconfig.pkg.json': 'tsconfig.lib.json'),
     },
   };
   return (host: Tree) => {
@@ -368,13 +390,13 @@ function isMonorepo(host:Tree){
 function generate(options: LibraryOptions,host:Tree): Source {
   const path = join(options.path as Path, options.name);
 
-  const publishingMode = isMonorepo(host)
+  const publishingMode = isMonorepo(host)&& options.pkgPublic
 
   const packageKey = publishingMode
   ? (options.prefix || `@tsai-platform`) + '/' + options.name
   : options.name;
 
-  // write npm
+  // write lib npm
   if(publishingMode){
 
     const npmfile = join(host.root.path,options.path as Path, options.name, '.npmrc')
@@ -388,12 +410,15 @@ function generate(options: LibraryOptions,host:Tree): Source {
     }
   }
 
+  const year = new Date().getFullYear().toString()
+  // copy or merge files,if git uncommited will stop
   return apply(url(join('./files' as Path, !!publishingMode ? `ts-lib` : options.language)), [
     template({
       ...strings,
       ...{
         ...options,
-        packageKey
+        packageKey,
+        year
       },
     }),
     move(path),
@@ -402,19 +427,27 @@ function generate(options: LibraryOptions,host:Tree): Source {
 
 function updatePnpmWorkspaceYaml(options: LibraryOptions,host:Tree){
   if(!isMonorepo(host))return host
-  const pkgbase = options.rootDir||DEFAULT_LIB_PATH
+  const pkgbase = options.rootDir|| DEFAULT_LIB_PATH
   try {
     const yamlLoader = new YamlLoader(process.cwd())
     yamlLoader.mergePkgSync(pkgbase)
+
+    // pnpm workspace
+    yamlLoader.writeFileSync(workspaceNpmrcContent,'.npmrc')
   } catch (_e) {
   }
 
   return host
 }
 
-// 
+/**
+ * 
+ * @param options 
+ * @param host 
+ * @returns 
+ */
 function generatePackages(options: LibraryOptions,host:Tree){
-  const pkgname = options.pkgBase?  options.pkgBase :DEFAULT_PUBLISH_LIBBDIR
+  const pkgname = options.pkgBase?  options.pkgBase : DEFAULT_PUBLISH_LIBBDIR
   const pkgPath = join(host.root.path,pkgname)
   return apply(url(join('./workspace' as Path, 'packages')), [
     template({

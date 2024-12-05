@@ -37,10 +37,10 @@
       "default":"packages",
       "description": "The libraries root directory."
     },
-    "libPublishing": {
+    "pkgPublic": {
       "type": "boolean",
       "default": false,
-      "description": "The libraries is publishing to npmjs."
+      "description": "The libraries either publishing npmjs."
     }
   },
   "required": ["name", "prefix"]

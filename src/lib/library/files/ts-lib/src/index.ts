@@ -1,2 +1,2 @@
 export * from './<%= name %>.module';
-export * from './<%= name %>.service';
+export * from './services';

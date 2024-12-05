@@ -1,2 +1,1 @@
-# Tsai lib publish directory
-
+# Tsai public library directory
