@@ -4,6 +4,13 @@
 
 <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/~tsailab" target="_blank"><img src="https://img.shields.io/npm/l/%40tsailab%2Fcli?color=%23FFDEAD&label=TSAI" alt="License" /></a>
+  <a href="https://discord.gg/lotolab" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+  <a href="https://x.com/lamborghini171" target="_blank"><img src="https://img.shields.io/twitter/follow/lamborghini171.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>  
+  <a href="https://www.npmjs.com/~tsailab" target="_blank"><img src="https://img.shields.io/npm/v/@tsailab/schematics.svg?label=@tsailab/schematics" alt="Tsai schematics" /></a>
+  <a href="https://www.npmjs.com/~tsailab" target="_blank"><img src="https://img.shields.io/npm/dm/%40tsailab%2Fschematics?style=flat&logoColor=%23FA0809" alt="Downloads" /></a>
+</p>
 
 ## Description
 
@@ -25,6 +32,14 @@ $ npm install -g @tsailab/schematics
 
 
 ## Stay in touch
+
+- Twitter - [@lamborghini171](https://twitter.com/lamborghini171)
+
+:raising_hand: :revolving_hearts: :revolving_hearts:
+
+<h1 align="center">
+Sincerely invite experts to improve the project functions together
+</h1>
 
 
 ## License
