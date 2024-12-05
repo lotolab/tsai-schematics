@@ -37,7 +37,7 @@ $ npm install -g @tsailab/schematics
 
 :revolving_hearts::revolving_hearts::revolving_hearts: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand::raising_hand::raising_hand::revolving_hearts::revolving_hearts::revolving_hearts:
 
-<font color=#ff8f00 size=4>Sincerely invite experts to improve the project functions together !</font>
+<font color="#ff8f00"><h3>Sincerely invite experts to improve the project functions together !</h3></font>
 
 :revolving_hearts::revolving_hearts::revolving_hearts: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand: :raising_hand::raising_hand::raising_hand::revolving_hearts: :revolving_hearts::revolving_hearts:
 
